@@ -1,0 +1,59 @@
+.mainContainer
+    width: 100%
+    min-height: 100vh
+    background-color: #06004e
+    padding: 50px 0
+.heroesContainer
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-content: center
+    align-items: center
+    width: 80%
+    margin: 0 auto
+    background-color: #0000ad
+    border-radius: 25px
+.createHero
+    @extend .heroesContainer
+.buttonCreateHero
+    overflow: hidden
+    width: 60%
+    margin: 35px 0
+    padding: 20px
+    font-size: 1.4em
+    border-radius: 25px
+    text-align: center
+    background-color: #2e962e
+    color: white
+    cursor: pointer
+.addHeroContainer
+    width: 50vw
+    display: flex
+    flex-direction: column
+    justify-content: space-evenly
+    &>input, &>textarea
+        margin: 10px auto
+        width: 35%
+        font-size: 1.3em
+        border-radius: 15px
+        padding: 10px
+        color: white
+        resize: none
+        border: 3px white solid
+        background-color: #200b7e
+.buttonsAddHero
+    display: flex
+    flex-direction: row
+    justify-content: space-evenly
+    &>div
+        cursor: pointer
+        padding: 15px
+        font-size: 1.4em
+        color: white
+        border-radius: 15px
+.closeButton
+    background-color: #8b0013
+.acceptButton
+    background-color: #2e962e
+.heroPages
+    @extend .heroesContainer

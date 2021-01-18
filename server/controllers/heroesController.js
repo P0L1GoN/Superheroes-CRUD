@@ -6,7 +6,7 @@ module.exports.getHeroes=(req,res)=>{
         db.all(`SELECT * FROM Heroes_Images ORDER BY hero_id`,(err,rows)=>{
             if(err){
                 console.log('Ошибка получения данных картинок')
-                res.status(500).send(err)
+                res.status(501).send(err)
             }
             else
                 heroImagesList=rows
@@ -14,7 +14,7 @@ module.exports.getHeroes=(req,res)=>{
         db.all(`SELECT * FROM Heroes ORDER BY id`,(err, rows)=>{
             if(err){
                 console.log('Ошибка получения данных Героев')
-                res.status(500).send(err)
+                res.status(502).send(err)
             }
             else{
                 rows.forEach(hero=>{
@@ -25,8 +25,9 @@ module.exports.getHeroes=(req,res)=>{
                             hero.image_array.push(image.image)
                     })
                 })
+                res.send(rows)
             }
-            res.send(rows)
+            
         })
     })
 }

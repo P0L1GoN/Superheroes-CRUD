@@ -15,7 +15,6 @@ db.serialize(()=> {
         origin_description TEXT,
         superpowers TEXT,
         catch_phrase TEXT)`)
-        console.log('hello')
     //Таблица картин героев
     db.run(`CREATE TABLE IF NOT EXISTS Heroes_Images (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
