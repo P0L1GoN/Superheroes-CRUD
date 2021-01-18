@@ -29,11 +29,24 @@
 .addHeroContainer
     width: 50vw
     display: flex
-    flex-direction: column
-    justify-content: space-evenly
-    &>input, &>textarea
+    flex-direction: row
+    flex-wrap: wrap
+    justify-content: space-around
+    align-items: center
+    align-content: center
+    &>.inputArea
+        flex-basis: 40%
+        display: flex
+        flex-direction: column
+        justify-content: center
+        align-items: center
+        &>span
+            font-size: 1.5em
+            margin: 10px
+            color: white
+    & input, & textarea
         margin: 10px auto
-        width: 35%
+        width: 100%
         font-size: 1.3em
         border-radius: 15px
         padding: 10px
@@ -43,6 +56,7 @@
         background-color: #200b7e
 .buttonsAddHero
     display: flex
+    margin-top: 10px
     flex-direction: row
     justify-content: space-evenly
     &>div
@@ -55,5 +69,26 @@
     background-color: #8b0013
 .acceptButton
     background-color: #2e962e
+.imageBlock
+    flex-basis: 20%
+    height: 30vh
+    border-radius: 25px
+    background-color: black
+    overflow: hidden
+    position: relative
+    &>img
+        width: 100%
+        position: absolute
+        left: 0
+        top: 0
+        margin: auto
+.addImageButton
+    background-color: #2908bb !important
+    color: white
+    font-size: 2em
+    text-align: center
+    cursor: pointer
+    &>span
+        font-size: 0.8em
 .heroPages
     @extend .heroesContainer
