@@ -1,6 +1,6 @@
 const sqlite =require('sqlite3')
 
-let db = new sqlite.Database('./heroesCopy.db',err=>{ //Подключение к бд
+let db = new sqlite.Database('./heroes.db',err=>{ //Подключение к бд
     if(err)
         return console.error(err.message)
     console.log('Connected to SQlite DB')
@@ -11,10 +11,10 @@ db.serialize(()=> {
     db.run(`CREATE TABLE IF NOT EXISTS Heroes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nickname TEXT,
-        real_name TEXT,
-        origin_description TEXT,
+        realName TEXT,
+        originDescription TEXT,
         superpowers TEXT,
-        catch_phrase TEXT)`)
+        catchPhrase TEXT)`)
     //Таблица картин героев
     db.run(`CREATE TABLE IF NOT EXISTS Heroes_Images (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

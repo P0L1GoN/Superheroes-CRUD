@@ -14,34 +14,13 @@ const http = axios.create({
     timeout: 10000,
 })
 //функция получения списка героев
-const getHeroes= async()=>{
-    return new Promise((resolve,reject)=>{
-        http.get(`/heroes`)
-        .then(res=>{
-            resolve(res.data)
-        })
-        .catch(error=>{
-            console.error(error)
-            reject(null)
-        })
-    })
-}
-const addHero=async(heroData)=>{
-    return new Promise((resolve,reject)=>{
-        http.post(`/heroes`,heroData)
-        .then(res=>{
-            resolve(res.data)
-        })
-        .catch(error=>{
-            console.error(error)
-            reject(null)
-        })
-    })
-}
+
+
 const Heroes = () => {
     const [heroList,setHeroList]=useState([])
     const [isHeroAdd,setIsHeroAdd]=useState(false)
-    const [isImagesAdd,setIsImagesAdd]=useState(true)
+    const [isImagesAdd,setIsImagesAdd]=useState(false)
+    const [isAddReady,setIsAddReady]=useState(false)
     const [nickname,setNickname]=useState('')
     const [realName,setRealName]=useState('')
     const [originDescription,setOriginDescription]=useState('')
@@ -49,12 +28,18 @@ const Heroes = () => {
     const [catchPhrase,setCatchPhrase]=useState('')
     const [heroImageArray,setHeroImageArray]=useState([])
     useEffect(()=>{
-        getHeroes().then((res)=>{
-            if(res!==null)
-                setHeroList(res)
-            console.log(res)
-        })
+        getHeroes()
     },[])
+    const getHeroes= ()=>{
+        http.get(`/heroes`)
+        .then(res=>{
+            setHeroList(res.data)
+            console.log(res.data)
+        })
+        .catch(error=>{
+            console.error(error)
+        })
+    }
     const clearInputs=()=>{
         setNickname('')
         setRealName('')
@@ -63,6 +48,28 @@ const Heroes = () => {
         setCatchPhrase('')
         setHeroImageArray([])
         setIsHeroAdd(false)
+        setIsImagesAdd(false)
+    }
+    const createHero=()=>{
+        return new Promise((resolve,reject)=>{
+            http.post(`/heroes/create`,{
+                "nickname": nickname,
+                "realName": realName,
+                "originDescription": originDescription,
+                "superpowers": superpowers,
+                "catchPhrase": catchPhrase,
+                "imageArray": heroImageArray
+            })
+            .then(res=>{
+                resolve(res.data)
+                setIsAddReady(true)
+                clearInputs()
+            })
+            .catch(error=>{
+                console.error(error)
+                reject(error)
+            })
+        })
     }
     return (
         <div className={styles.mainContainer}>
@@ -95,14 +102,18 @@ const Heroes = () => {
                             </div>
                         </div>
                         <div className={styles.buttonsAddHero}>
-                                <div className={styles.closeButton} onClick={()=>clearInputs()}>Отмена</div>
-                                <div className={styles.acceptButton}>Далее</div>
-                            </div>
+                            <div className={styles.closeButton} onClick={()=>clearInputs()}>Отмена</div>
+                            <div className={styles.acceptButton} onClick={()=>{
+                                setIsHeroAdd(false)
+                                setIsImagesAdd(true)
+                            }}>Далее</div>
+                        </div>
                     </ModalWindow>
                     <ModalWindow isVisible={isImagesAdd}>
                         <div className={styles.addHeroContainer}>
                             <ImageUploading
-                                multiple={false}
+                                multiple
+                                value={heroImageArray}
                                 onChange={(imageList,index) => setHeroImageArray(imageList)}
                                 dataURLKey="dataUrl"
                             >
@@ -117,12 +128,29 @@ const Heroes = () => {
                                     </div>
                                 )}
                             </ImageUploading>
+                            {
+                                heroImageArray.map(el=>{
+                                    return(
+                                        <div className={styles.imageBlock}>
+                                            <img src={el.dataUrl} alt="картинка"/>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div className={styles.buttonsAddHero}>
+                            <div className={styles.closeButton} onClick={()=>clearInputs()}>Отмена</div>
+                            <div className={styles.acceptButton} onClick={()=>createHero()}>Готово</div>
                         </div>
                     </ModalWindow>
+                    <ModalWindow isVisible={isAddReady}>
+                            <span>Герой успешно добавился</span>
+                            <div className={styles.buttonsAddHero}>
+                                <div className={styles.acceptButton} onClick={()=>setIsAddReady(false)}>Ок</div>
+                            </div>
+                    </ModalWindow>
                 </div>
-                <div className={styles.heroPages}>
-                    <HeroPages/>
-                </div>
+                <HeroPages heroes={heroList}/>
             </div>
         </div>
     );
