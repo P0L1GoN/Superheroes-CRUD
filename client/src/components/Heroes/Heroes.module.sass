@@ -10,6 +10,7 @@
     align-content: center
     align-items: center
     width: 80%
+    padding-bottom: 30px
     margin: 0 auto
     background-color: #0000ad
     border-radius: 25px
@@ -20,7 +21,7 @@
     width: 60%
     margin: 35px 0
     padding: 20px
-    font-size: 1.4em
+    font-size: 1.6em
     border-radius: 25px
     text-align: center
     background-color: #2e962e
@@ -65,12 +66,24 @@
         font-size: 1.4em
         color: white
         border-radius: 15px
+.buttonsHero
+    width: 80%
+    display: flex
+    margin-top: 10px
+    flex-direction: row
+    justify-content: space-evenly
+    &>div
+        cursor: pointer
+        padding: 15px
+        font-size: 1.4em
+        color: white
+        border-radius: 15px
 .closeButton
     background-color: #8b0013
 .acceptButton
     background-color: #2e962e
 .imageBlock
-    flex-basis: 20%
+    flex-basis: 21%
     height: 30vh
     border-radius: 25px
     background-color: black
@@ -84,12 +97,30 @@
         right: 0
         bottom: 0
         margin: auto
+.deleteImage
+    width: 100%
+    position: absolute
+    bottom: 0
+    z-index: 10000
+    text-align: center
+    color: white
+    font-size: 1.6em
+    cursor: pointer
+    padding: 5px
+    overflow-wrap: anywhere
+    background-color: rgba(250,10,10,0.6)
+    &:hover
+       background-color: rgba(250,10,10,1) 
 .addImageButton
     background-color: #2908bb !important
     color: white
-    font-size: 1.8em
+    font-size: 1.6em
     text-align: center
     cursor: pointer
+    display: flex
+    flex-direction: column
+    justify-content: space-evenly
+    align-items: center
     &>span
         font-size: 0.8em
 .heroPages

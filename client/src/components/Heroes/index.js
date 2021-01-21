@@ -20,13 +20,15 @@ const Heroes = () => {
     const [heroList,setHeroList]=useState([])
     const [isHeroAdd,setIsHeroAdd]=useState(false)
     const [isImagesAdd,setIsImagesAdd]=useState(false)
-    const [isAddReady,setIsAddReady]=useState(false)
+    const [isMessage,setIsMessage]=useState(false)
     const [nickname,setNickname]=useState('')
     const [realName,setRealName]=useState('')
     const [originDescription,setOriginDescription]=useState('')
     const [superpowers,setSuperpowers]=useState('')
     const [catchPhrase,setCatchPhrase]=useState('')
     const [heroImageArray,setHeroImageArray]=useState([])
+    const [messageModal,setMessageModal]=useState('')
+    const [activeHero, setActiveHero]=useState()
     useEffect(()=>{
         getHeroes()
     },[])
@@ -34,7 +36,57 @@ const Heroes = () => {
         http.get(`/heroes`)
         .then(res=>{
             setHeroList(res.data)
-            console.log(res.data)
+        })
+        .catch(error=>{
+            console.error(error)
+        })
+    }
+    const createHero=()=>{
+        http.post(`/heroes/create`,{
+            "nickname": nickname,
+            "realName": realName,
+            "originDescription": originDescription,
+            "superpowers": superpowers,
+            "catchPhrase": catchPhrase,
+            "imageArray": heroImageArray
+        })
+        .then(res=>{
+            getHeroes()
+            setMessageModal('Герой успешно добавился')
+            setIsMessage(true)
+            clearInputs()
+        })
+        .catch(error=>{
+            console.error(error)
+        })
+    }
+    const deleteHero=()=>{
+        http.post(`/heroes/delete`,{
+            "id": activeHero.id
+        })
+        .then(res=>{
+            getHeroes()
+            setMessageModal('Герой успешно удален')
+            setIsMessage(true)
+        })
+        .catch(error=>{
+            console.error(error)
+        })
+    }
+    const updateHero=()=>{
+        http.post(`/heroes/update`,{
+            "id": activeHero.id,
+            "nickname": nickname,
+            "realName": realName,
+            "originDescription": originDescription,
+            "superpowers": superpowers,
+            "catchPhrase": catchPhrase,
+            "imageArray": heroImageArray
+        })
+        .then(res=>{
+            getHeroes()
+            setMessageModal('Герой успешно удален')
+            setIsMessage(true)
         })
         .catch(error=>{
             console.error(error)
@@ -49,27 +101,6 @@ const Heroes = () => {
         setHeroImageArray([])
         setIsHeroAdd(false)
         setIsImagesAdd(false)
-    }
-    const createHero=()=>{
-        return new Promise((resolve,reject)=>{
-            http.post(`/heroes/create`,{
-                "nickname": nickname,
-                "realName": realName,
-                "originDescription": originDescription,
-                "superpowers": superpowers,
-                "catchPhrase": catchPhrase,
-                "imageArray": heroImageArray
-            })
-            .then(res=>{
-                resolve(res.data)
-                setIsAddReady(true)
-                clearInputs()
-            })
-            .catch(error=>{
-                console.error(error)
-                reject(error)
-            })
-        })
     }
     return (
         <div className={styles.mainContainer}>
@@ -129,9 +160,13 @@ const Heroes = () => {
                                 )}
                             </ImageUploading>
                             {
-                                heroImageArray.map(el=>{
+                                heroImageArray.map((el,index)=>{
                                     return(
-                                        <div className={styles.imageBlock}>
+                                        <div className={styles.imageBlock} key={index}>
+                                            <div className={styles.deleteImage} onClick={()=>{
+                                                let newArray=heroImageArray.filter((item,i)=>i!==index)
+                                                setHeroImageArray(newArray)
+                                            }}>Удалить</div>
                                             <img src={el.dataUrl} alt="картинка"/>
                                         </div>
                                     )
@@ -143,15 +178,21 @@ const Heroes = () => {
                             <div className={styles.acceptButton} onClick={()=>createHero()}>Готово</div>
                         </div>
                     </ModalWindow>
-                    <ModalWindow isVisible={isAddReady}>
-                            <span>Герой успешно добавился</span>
+                    <ModalWindow isVisible={isMessage}>
+                            <span>{messageModal}</span>
                             <div className={styles.buttonsAddHero}>
-                                <div className={styles.acceptButton} onClick={()=>setIsAddReady(false)}>Ок</div>
+                                <div className={styles.acceptButton} onClick={()=>setIsMessage(false)}>Ок</div>
                             </div>
                     </ModalWindow>
                 </div>
-                <HeroPages heroes={heroList}/>
+                <HeroPages heroes={heroList} setActiveHero={setActiveHero} activeHero={activeHero}/>
+                {activeHero &&
+                    <div className={styles.buttonsHero}>
+                        <div className={styles.closeButton} onClick={()=>deleteHero}>Удалить</div>
+                        <div className={styles.acceptButton}>Редактировать</div>
+                    </div>}
             </div>
+            
         </div>
     );
 };

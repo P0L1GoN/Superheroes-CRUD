@@ -19,10 +19,10 @@ module.exports.getHeroes=(req,res)=>{
             else{
                 rows.forEach(hero=>{
                     //цикл обьединения картинок и информации героев в один обьект
-                    hero.image_array=[]
+                    hero.imageArray=[]
                     heroImagesList.forEach(image=>{
                         if(image.hero_id===hero.id)
-                            hero.image_array.push(image.image)
+                            hero.imageArray.push(image.image)
                     })
                 })
                 res.send(rows)
