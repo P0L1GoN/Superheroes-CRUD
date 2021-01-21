@@ -14,6 +14,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.get('/heroes', heroesController.getHeroes)
 app.post('/heroes/create', heroesController.createHeroes)
+app.post('/heroes/delete', heroesController.deleteHeroes)
+app.post('/heroes/update', heroesController.updateHeroes)
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`)
 })

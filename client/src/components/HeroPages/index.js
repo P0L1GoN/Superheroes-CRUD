@@ -30,11 +30,9 @@ const HeroPages = (props) => {
                             props.setActiveHero(hero)
                         }}>
                             {hero.imageArray[0]?
-                            (<>
-                            <img src={hero.imageArray[0]} alt="Изображение героя"/>
-                            <div className={styles.heroName}>{hero.nickname}</div>
-                            </>):
+                            (<img src={hero.imageArray[0]} alt="Изображение героя"/>):
                             (<span>Изображение отсутствует</span>)}
+                            <div className={styles.heroName}>{hero.nickname}</div>
                         </div>
                     )
                 })}

@@ -64,3 +64,56 @@ module.exports.createHeroes=(req,res)=>{
 
     })
 }
+module.exports.deleteHeroes=(req,res)=>{
+    db.serialize(()=>{
+        db.run(`DELETE FROM Heroes WHERE id = ${req.body.id}`,err=>{
+            if(err){
+                console.error('Errorr'+err)
+                return res.status(505).send(err)
+            }
+        })
+        db.run(`DELETE FROM Heroes_Images WHERE hero_id = ${req.body.id}`,err=>{
+            if(err){
+                console.error('Errorr'+err)
+                return res.status(506).send(err)
+            }
+            else
+                res.send({success: 'true'})
+        })
+    })
+}
+module.exports.updateHeroes=(req,res)=>{
+    db.serialize(()=>{
+        db.run(`UPDATE Heroes SET 
+        nickname = '${req.body.nickname}',
+        realName = '${req.body.realName}',
+        originDescription = '${req.body.originDescription}',
+        superpowers = '${req.body.superpowers}',
+        catchPhrase = '${req.body.catchPhrase}'
+        WHERE id = ${req.body.id}`
+        ,function (err){
+            if(err){
+                console.error('Errorr'+err)
+                return res.status(507).send(err)
+            }
+            else{
+                db.run(`DELETE FROM Heroes_Images WHERE hero_id = ${req.body.id}`,err=>{
+                    if(err){
+                        console.error('Errorr'+err)
+                        return res.status(508).send(err)
+                    }
+                    else{
+                        req.body.imageArray.map(image=>{
+                            db.run(`INSERT INTO Heroes_Images (hero_id, image)
+                            VALUES (${req.body.id}, "${image.dataUrl}")`,err=>{
+                                if(err)
+                                    return res.status(509).send(err)
+                            })
+                        })
+                        res.send({success: 'true'})
+                    }    
+                })
+            }
+        })
+    })
+}

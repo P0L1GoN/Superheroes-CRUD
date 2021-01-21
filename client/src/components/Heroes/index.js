@@ -29,6 +29,7 @@ const Heroes = () => {
     const [heroImageArray,setHeroImageArray]=useState([])
     const [messageModal,setMessageModal]=useState('')
     const [activeHero, setActiveHero]=useState()
+    const [createOrEdit,setCreateOrEdit]=useState(true)
     useEffect(()=>{
         getHeroes()
     },[])
@@ -68,6 +69,8 @@ const Heroes = () => {
             getHeroes()
             setMessageModal('Герой успешно удален')
             setIsMessage(true)
+            setActiveHero()
+            
         })
         .catch(error=>{
             console.error(error)
@@ -85,8 +88,10 @@ const Heroes = () => {
         })
         .then(res=>{
             getHeroes()
-            setMessageModal('Герой успешно удален')
+            setMessageModal('Герой успешно обновлен')
             setIsMessage(true)
+            setActiveHero()
+            clearInputs()
         })
         .catch(error=>{
             console.error(error)
@@ -102,11 +107,22 @@ const Heroes = () => {
         setIsHeroAdd(false)
         setIsImagesAdd(false)
     }
+    const fillInputs=()=>{
+        setNickname(activeHero.nickname)
+        setRealName(activeHero.realName)
+        setOriginDescription(activeHero.originDescription)
+        setSuperpowers(activeHero.superpowers)
+        setCatchPhrase(activeHero.catchPhrase)
+        setHeroImageArray(activeHero.imageArray)
+        setIsHeroAdd(true)
+    }
     return (
         <div className={styles.mainContainer}>
             <div className={styles.heroesContainer}>
                 <div className={styles.createHero}>
-                    <div className={styles.buttonCreateHero} onClick={()=>setIsHeroAdd(true)}>
+                    <div className={styles.buttonCreateHero} onClick={()=>{
+                        setIsHeroAdd(true)
+                        setCreateOrEdit(true)}}>
                         Добавить Героя
                     </div>
                     <ModalWindow isVisible={isHeroAdd}>
@@ -175,7 +191,7 @@ const Heroes = () => {
                         </div>
                         <div className={styles.buttonsAddHero}>
                             <div className={styles.closeButton} onClick={()=>clearInputs()}>Отмена</div>
-                            <div className={styles.acceptButton} onClick={()=>createHero()}>Готово</div>
+                            <div className={styles.acceptButton} onClick={()=>createOrEdit?createHero():updateHero()}>Готово</div>
                         </div>
                     </ModalWindow>
                     <ModalWindow isVisible={isMessage}>
@@ -188,8 +204,11 @@ const Heroes = () => {
                 <HeroPages heroes={heroList} setActiveHero={setActiveHero} activeHero={activeHero}/>
                 {activeHero &&
                     <div className={styles.buttonsHero}>
-                        <div className={styles.closeButton} onClick={()=>deleteHero}>Удалить</div>
-                        <div className={styles.acceptButton}>Редактировать</div>
+                        <div className={styles.closeButton} onClick={()=>deleteHero()}>Удалить</div>
+                        <div className={styles.acceptButton} onClick={()=>{
+                            setCreateOrEdit(false)
+                            fillInputs()
+                        }}>Редактировать</div>
                     </div>}
             </div>
             
